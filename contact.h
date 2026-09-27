@@ -29,4 +29,7 @@ int isDuplicateEmail(AddressBook *addressBook, char email[]);
 void sort_name(AddressBook *addressBook);
 void sort_phone(AddressBook *addressBook);
 void sort_email(AddressBook *addressBook);
+void search_name(AddressBook *addressBook);
+void search_phone(AddressBook *addressBook);
+void search_email(AddressBook *addressBook);
 #endif

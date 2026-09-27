@@ -83,6 +83,23 @@ void createContact(AddressBook *addressBook)
 void searchContact(AddressBook *addressBook) 
 {
     /* Define the logic for search */
+    int search;
+    printf("On which basis you need to search the contacts :\n1.Name\n2.Phone\n3.Email\nChoose the option:\n");
+    scanf("%d",&search);
+    switch(search)
+    {
+        case 1:
+            search_name(addressBook);
+            break;
+        case 2:
+            search_phone(addressBook);
+            break;
+        case 3:
+            search_email(addressBook);
+            break;
+        default :
+            printf("Try again.");
+    }
 }
 
 void editContact(AddressBook *addressBook)
@@ -252,4 +269,55 @@ void sort_email(AddressBook *addressBook)
             }
         }
     }
+}
+void search_name(AddressBook *addressBook)
+{
+    int found=0;
+    char searchText[50];
+    printf("Enter name to search: ");
+    scanf(" %[^\n]",searchText);
+    for(int i=0;i<addressBook->contactCount;i++)
+    {
+        if(strcasestr(addressBook->contacts[i].name,searchText)!=NULL)
+        {
+            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            found=1;
+        }   
+    }
+    if(found==0)
+        printf("Contact not found");
+}
+void search_phone(AddressBook *addressBook)
+{
+    int found=0;
+    char searchText[50];
+    printf("Enter phone number to search: ");
+    scanf(" %[^\n]",searchText);
+    for(int i=0;i<addressBook->contactCount;i++)
+    {
+        if(strcasestr(addressBook->contacts[i].phone,searchText)!=NULL)
+        {
+            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            found=1;
+        }
+    }
+    if(found==0)
+        printf("Contact not found");
+}
+void search_email(AddressBook *addressBook)
+{
+    int found=0;
+    char searchText[50];
+    printf("Enter email to search: ");
+    scanf(" %[^\n]",searchText);
+    for(int i=0;i<addressBook->contactCount;i++)
+    {
+        if(strcasestr(addressBook->contacts[i].email,searchText)!=NULL)
+        {
+            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            found=1;
+        }
+    }
+    if(found==0)
+        printf("Contact not found");
 }
