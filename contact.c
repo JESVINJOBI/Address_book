@@ -6,9 +6,28 @@
 //#include "populate.h"
 #include <ctype.h>
 
-void listContacts(AddressBook *addressBook, int sortCriteria) 
+void listContacts(AddressBook *addressBook) 
 {
     // Sort contacts based on the choosen criteria
+    int criteria;
+    printf("On which basis you need to sort the contacts :\n1.Name\n2.Phone\n3.Email\nChoose the option:\n");
+    scanf("%d",&criteria);
+    switch(criteria)
+    {
+        case 1:
+            sort_name(addressBook);
+            break;
+        case 2:
+            sort_phone(addressBook);
+            break;
+        case 3:
+            sort_email(addressBook);
+            break;
+        default :
+            printf("Try again.");
+    }
+    for(int i=0;i<addressBook->contactCount;i++)
+        printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
     
 }
 
@@ -116,7 +135,7 @@ int isValidEmail(char email[])
     int atCount = 0;
     int atIndex = -1;
 
-    if (len < 5 || strcmp(email + len - 4, ".com") != 0)
+    if (len < 5 || strcmp(email+len-4,".com") != 0)
     {
         return 0;
     }
@@ -128,7 +147,7 @@ int isValidEmail(char email[])
             return 0;
         }
 
-        if (email[i] == '.' && email[i + 1] == '.')
+        if (email[i]=='.' && email[i + 1]=='.')
         {
             return 0;
         }
@@ -145,12 +164,12 @@ int isValidEmail(char email[])
         return 0;
     }
 
-    if (atIndex == 0 || atIndex == len - 1)
+    if (atIndex==0 || atIndex==len - 1)
     {
         return 0;
     }
 
-    if (email[atIndex - 1]=='.' || email[atIndex + 1]=='.')
+    if (email[atIndex-1]=='.' || email[atIndex + 1]=='.')
     {
         return 0;
     }
@@ -188,4 +207,49 @@ int isDuplicateEmail(AddressBook *addressBook, char email[])
             return 1;
     }
     return 0;
+}
+void sort_name(AddressBook *addressBook)
+{
+    for(int i=0;i<(addressBook->contactCount)-1;i++)
+    {
+        for(int j=0;j<(addressBook->contactCount)-i-1;j++)
+        {
+            if(strcmp(addressBook->contacts[j].name,addressBook->contacts[j+1].name)>0)
+            {
+                Contact temp=addressBook->contacts[j];
+                addressBook->contacts[j]=addressBook->contacts[j+1];
+                addressBook->contacts[j+1]=temp;
+            }
+        }
+    }
+}
+void sort_phone(AddressBook *addressBook)
+{
+    for(int i=0;i<(addressBook->contactCount)-1;i++)
+    {
+        for(int j=0;j<(addressBook->contactCount)-i-1;j++)
+        {
+            if(strcmp(addressBook->contacts[j].phone,addressBook->contacts[j+1].phone)>0)
+            {
+                Contact temp=addressBook->contacts[j];
+                addressBook->contacts[j]=addressBook->contacts[j+1];
+                addressBook->contacts[j+1]=temp;
+            }
+        }
+    }
+}
+void sort_email(AddressBook *addressBook)
+{
+    for(int i=0;i<(addressBook->contactCount)-1;i++)
+    {
+        for(int j=0;j<(addressBook->contactCount)-i-1;j++)
+        {
+            if(strcmp(addressBook->contacts[j].email,addressBook->contacts[j+1].email)>0)
+            {
+                Contact temp=addressBook->contacts[j];
+                addressBook->contacts[j]=addressBook->contacts[j+1];
+                addressBook->contacts[j+1]=temp;
+            }
+        }
+    }
 }
