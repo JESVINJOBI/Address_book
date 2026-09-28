@@ -6,6 +6,9 @@
 //#include "populate.h"
 #include <ctype.h>
 
+int matching_index[100];
+int matching_count;
+
 void listContacts(AddressBook *addressBook) 
 {
     // Sort contacts based on the choosen criteria
@@ -106,12 +109,30 @@ void editContact(AddressBook *addressBook)
 {
 	/* Define the logic for Editcontact */
     
+    
 }
 
 void deleteContact(AddressBook *addressBook)
 {
 	/* Define the logic for deletecontact */
-   
+    searchContact(addressBook);
+    if(matching_count==0)
+    {
+        return;
+    }
+    int choice;
+    printf("Enter the serial number which is need to be deleted :");
+    scanf("%d",&choice);
+    if(choice< 1||choice>matching_count)
+    {
+        printf("Invalid serial number.\n");
+        return;
+    }
+    for(int i=matching_index[choice-1];i<addressBook->contactCount-1;i++)
+    {
+        addressBook->contacts[i]=addressBook->contacts[i+1];
+    }
+    addressBook->contactCount--;
 }
 
 int isValidName(char name[])
@@ -273,6 +294,8 @@ void sort_email(AddressBook *addressBook)
 void search_name(AddressBook *addressBook)
 {
     int found=0;
+    int SI=1;
+    matching_count = 0;
     char searchText[50];
     printf("Enter name to search: ");
     scanf(" %[^\n]",searchText);
@@ -280,8 +303,11 @@ void search_name(AddressBook *addressBook)
     {
         if(strcasestr(addressBook->contacts[i].name,searchText)!=NULL)
         {
-            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            printf("%d. %s\t%s\t%s\n",SI,addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             found=1;
+            matching_index[SI-1]=i;
+            matching_count++;
+            SI++;
         }   
     }
     if(found==0)
@@ -290,6 +316,8 @@ void search_name(AddressBook *addressBook)
 void search_phone(AddressBook *addressBook)
 {
     int found=0;
+    int SI=1;
+    matching_count = 0;
     char searchText[50];
     printf("Enter phone number to search: ");
     scanf(" %[^\n]",searchText);
@@ -297,8 +325,11 @@ void search_phone(AddressBook *addressBook)
     {
         if(strcasestr(addressBook->contacts[i].phone,searchText)!=NULL)
         {
-            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            printf("%d. %s\t%s\t%s\n",SI,addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             found=1;
+            matching_index[SI-1]=i;
+            matching_count++;
+            SI++;
         }
     }
     if(found==0)
@@ -307,6 +338,8 @@ void search_phone(AddressBook *addressBook)
 void search_email(AddressBook *addressBook)
 {
     int found=0;
+    int SI=1;
+    matching_count = 0;
     char searchText[50];
     printf("Enter email to search: ");
     scanf(" %[^\n]",searchText);
@@ -314,8 +347,11 @@ void search_email(AddressBook *addressBook)
     {
         if(strcasestr(addressBook->contacts[i].email,searchText)!=NULL)
         {
-            printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
+            printf("%d. %s\t%s\t%s\n",SI,addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             found=1;
+            matching_index[SI-1]=i;
+            matching_count++;
+            SI++;
         }
     }
     if(found==0)
