@@ -108,8 +108,131 @@ void searchContact(AddressBook *addressBook)
 void editContact(AddressBook *addressBook)
 {
 	/* Define the logic for Editcontact */
-    
-    
+    searchContact(addressBook);
+    if(matching_count==0)
+    {
+        return;
+    }
+    int choice;
+    printf("Enter the serial number which is need to be edit :");
+    scanf("%d",&choice);
+    if(choice< 1 || choice>matching_count)
+    {
+        printf("Invalid serial number.\n");
+        return;
+    }
+    int editChoice;
+    int index = matching_index[choice - 1];
+    printf("What do you want to edit :\n1.Name\n2.Phone\n3.Email\nChoose the option:\n");
+    printf("Enter your choice: ");
+    scanf("%d", &editChoice);
+    switch(editChoice)
+    {
+        case 1:
+        {
+            char name[50];
+            while(1)
+            {
+                printf("Enter new name: ");
+                scanf(" %[^\n]",name);
+                if(isValidName(name))
+                {
+                    strcpy(addressBook->contacts[index].name,name);
+                    break;
+                }
+                else
+                {
+                    printf("Invalid name. Try again.\n");
+                }
+            }
+
+            printf("Name updated successfully.\n");
+            break;
+        }
+
+        case 2:
+        {
+            char phone[20];
+            while(1)
+            {
+                printf("Enter new phone number: ");
+                scanf("%s", phone);
+                if(!isValidPhone(phone))
+                {
+                    printf("Invalid phone number. Try again.\n");
+                    continue;
+                }
+
+                int duplicate = 0;
+
+                for(int i = 0; i < addressBook->contactCount; i++)
+                {
+                    if(i != index && strcmp(addressBook->contacts[i].phone, phone) == 0)
+                    {
+                        duplicate = 1;
+                        break;
+                    }
+                }
+
+                if(duplicate)
+                {
+                    printf("Phone number already exists. Try another.\n");
+                }
+                else
+                {
+                    strcpy(addressBook->contacts[index].phone, phone);
+                    break;
+                }
+            }
+
+            printf("Phone updated successfully.\n");
+            break;
+        }
+
+        case 3:
+        {
+            char email[50];
+
+            while(1)
+            {
+                printf("Enter new email: ");
+                scanf("%s", email);
+
+                if(!isValidEmail(email))
+                {
+                    printf("Invalid email. Try again.\n");
+                    continue;
+                }
+
+                int duplicate = 0;
+
+                for(int i = 0; i < addressBook->contactCount; i++)
+                {
+                    if(i != index && strcmp(addressBook->contacts[i].email, email) == 0)
+                    {
+                        duplicate = 1;
+                        break;
+                    }
+                }
+
+                if(duplicate)
+                {
+                    printf("Email already exists. Try another.\n");
+                }
+                else
+                {
+                    strcpy(addressBook->contacts[index].email, email);
+                    break;
+                }
+            }
+
+            printf("Email updated successfully.\n");
+            break;
+        }
+
+        default:
+            printf("Invalid choice.\n");
+    }
 }
 
 void deleteContact(AddressBook *addressBook)
