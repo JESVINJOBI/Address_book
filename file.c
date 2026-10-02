@@ -16,6 +16,12 @@ void saveContactsToFile(AddressBook *addressBook) {
 void loadContactsFromFile(AddressBook *addressBook) {
     FILE *fp;
     fp=fopen("contacts.csv","r");
+    if (fp == NULL)
+    {
+        printf("No contacts file found.\n");
+        addressBook->contactCount = 0;
+        return;
+    }
     fscanf(fp,"#%d\n",&(addressBook->contactCount));
     for(int i=0;i<addressBook->contactCount;i++)
     {

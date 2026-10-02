@@ -19,19 +19,23 @@ void listContacts(AddressBook *addressBook)
     {
         case 1:
             sort_name(addressBook);
+            for(int i=0;i<addressBook->contactCount;i++)
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             break;
         case 2:
             sort_phone(addressBook);
+            for(int i=0;i<addressBook->contactCount;i++)
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             break;
         case 3:
             sort_email(addressBook);
+            for(int i=0;i<addressBook->contactCount;i++)
+                printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
             break;
         default :
             printf("Try again.");
     }
-    for(int i=0;i<addressBook->contactCount;i++)
-        printf("%s\t%s\t%s\n",addressBook->contacts[i].name,addressBook->contacts[i].phone,addressBook->contacts[i].email);
-    
+        
 }
 
 void initialize(AddressBook *addressBook) {
@@ -264,7 +268,7 @@ int isValidName(char name[])
     {
         for(int i=0;name[i]!='\0';i++)
         {
-            if(!isalpha(name[i])&&name[i]!=' ')
+            if(!isalnum(name[i])&&name[i]!=' ')
                 return 0;
         }
         return 1;
@@ -295,12 +299,17 @@ int isValidEmail(char email[])
     int len = strlen(email);
     int atCount = 0;
     int atIndex = -1;
-
-    if (len < 5 || strcmp(email+len-4,".com") != 0)
+    // Checking email ends with .com
+    if (len<5 || strcmp(email+len-4,".com") != 0)
     {
         return 0;
     }
-
+    // First character must be alphanumeric
+    if (!isalnum(email[0]))
+    {
+        return 0;
+    }
+    // Check uppercase, consecutive dots and @
     for (int i = 0; i < len; i++)
     {
         if (isupper(email[i]))
@@ -308,47 +317,53 @@ int isValidEmail(char email[])
             return 0;
         }
 
-        if (email[i]=='.' && email[i + 1]=='.')
+        if (i<len-1&&email[i]=='.'&&email[i+1] == '.')
         {
             return 0;
         }
-
-        if (email[i]=='@')
+        if (email[i] == '@')
         {
             atCount++;
-            atIndex=i;
+            atIndex = i;
         }
     }
-
-    if (atCount!= 1)
+    // There must be exactly one @
+    if (atCount != 1)
     {
         return 0;
     }
 
-    if (atIndex==0 || atIndex==len - 1)
+    // @ cannot be first or last
+    if (atIndex == 0 || atIndex == len - 1)
     {
         return 0;
     }
 
-    if (email[atIndex-1]=='.' || email[atIndex + 1]=='.')
+    // Cannot have .@, -@ or @.
+    if (email[atIndex - 1] == '.' ||
+        email[atIndex - 1] == '-' ||
+        email[atIndex + 1] == '.')
     {
         return 0;
     }
 
-    int dotAfterAt = 0;
-    for (int i =atIndex + 1; i<len; i++)
+    // There must be at least one alphanumeric
+    // character between @ and .com
+    int domainValid = 0;
+
+    for (int i = atIndex + 1; i < len - 4; i++)
     {
-        if (email[i]=='.')
+        if (isalnum(email[i]))
         {
-            dotAfterAt=1;
+            domainValid = 1;
             break;
         }
     }
-
-    if (!dotAfterAt)
+    if (!domainValid)
     {
         return 0;
     }
+
     return 1;
 }
 int isDuplicatePhone(AddressBook *addressBook, char phone[])
